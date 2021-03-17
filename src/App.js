@@ -5,7 +5,10 @@ import Login from './component/login'
 const useStyles = makeStyles((theme) => ({
   loginContainer: {
     backgroundColor: '#FFA500',
-    height: '100vh'
+    height: '100vh',
+    [theme.breakpoints.down("sm")]: {
+      backgroundColor: '#FFA500'
+    }
   }
 }));
 
