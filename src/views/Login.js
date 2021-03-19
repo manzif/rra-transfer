@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Login from './component/login'
+import LoginComponent from '../component/login'
 
 const useStyles = makeStyles((theme) => ({
   loginContainer: {
@@ -12,15 +12,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function App() {
+function Login() {
   const classes = useStyles();
   return (
     <div className="App">
       <Box className={classes.loginContainer}>
-        <Login />
+        <LoginComponent />
       </Box>
     </div>
   );
 }
 
-export default App;
+export default Login;

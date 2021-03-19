@@ -7,6 +7,9 @@ const theme = createMuiTheme({
     },
     background: {
         default: '#ffffff'
+    },
+    secondary: {
+      main: '#1A1A1D'
     }
   },
   typography: {
@@ -14,6 +17,9 @@ const theme = createMuiTheme({
       'Chilanka',
       'cursive',
     ].join(','),
+    button: {
+      textTransform: 'none'
+    }
   }
 });
 
