@@ -1,68 +1,51 @@
 import axios from "axios";
-import {
-    LOGIN_START,
-    LOGIN_SUCCESS,
-    LOGIN_FAILURE
-} from "./types";
+import { LOGIN_START, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT } from "./type";
 
-const BASE_URL = 'https://dataprocessor.api.lmis.techclick.rw';
+const BASE_URL = "http://35.167.131.59:4000/api/users";
 
-
-const loginStart = () => {
-    return {
-        type: LOGIN_START
-    };
+export const loginStart = () => {
+  return {
+    type: LOGIN_START,
+  };
 };
 
-export const loginSuccess = () => {
-    return {
-        type: LOGIN_SUCCESS
-    };
+export const loginSuccess = (data) => {
+  return {
+    type: LOGIN_SUCCESS,
+    userInfo: data
+  };
 };
 
 export const loginFailure = (errors) => {
-    return {
-        type: LOGIN_FAILURE,
-        errors
-    };
+  return {
+    type: LOGIN_FAILURE,
+    errors,
+  };
 };
 
-export const checkAuthState = () => {
-    return (dispatch) => {
-        if (authService.isAuthenticated()) {
-            dispatch(loginSuccess());
+export const login = (email, password) => {
+  return (dispatch) => {
+    return axios
+      .post(`${BASE_URL}/login`, {
+        email,
+        password
+      })
+      .then(dispatch(loginStart()))
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(loginSuccess(res.data));
         }
-    };
-};
-
-export const login = (userData) => {
-    return (dispatch) => {
-        return axios
-            .post(`${BASE_URL}/login`, {
-                ...userData
-            })
-            .then(dispatch(loginStart()))
-            .then((res) => {
-                if (res.status === 200) {
-                    authService.saveObject(res.data.body); // Storing access token to local storage
-                    dispatch(loginSuccess());
-                } else {
-                    const msg = res.data.description ?
-                        res.data.description :
-                        "Incorrect email or password!";
-                    dispatch(loginFailure(msg));
-                }
-            })
-            .catch((error) => {
-                if (error.status === 500 || error.status === 502 || error.status === 503) {
-                    dispatch(loginFailure(error.message));
-                }
-            });
-    };
+      })
+      .catch((error) => {
+        if (error.response.data.message === "Wrong email or password") {
+          return dispatch(loginFailure(error.response.data.message));
+        }
+        dispatch(loginFailure(error.message));
+      });
+  };
 };
 
 export const logout = () => {
-    authService.invalidateUser();
     return {
         type: LOGOUT
     };
